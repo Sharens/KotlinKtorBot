@@ -37,6 +37,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:3.1.2")
     implementation("io.ktor:ktor-client-content-negotiation:3.1.2")
     implementation("io.ktor:ktor-serialization-kotlinx-json:3.1.2")
+    implementation("net.dv8tion:JDA:5.0.0-beta.13")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
