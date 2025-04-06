@@ -12,6 +12,7 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
     id("io.ktor.plugin") version "3.1.2"
+    kotlin("plugin.serialization") version "2.1.20"
 }
 
 repositories {
@@ -47,7 +48,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "org.example.AppKt"
+    mainClass = "org.bot.AppKt"
 }
 
 tasks.named<Test>("test") {
