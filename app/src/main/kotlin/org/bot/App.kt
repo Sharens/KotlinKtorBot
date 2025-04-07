@@ -35,7 +35,58 @@ fun main() {
                         event.hook.sendMessage("Wysłano wiadomość dostępne kategorie").queue()
                         CoroutineScope(Dispatchers.IO).launch {
                             try {
-                                discordClient.sendMessage(webhookUrl, DiscordClient.DiscordMessage("Lista kategorii: ${categories.joinToString(", ")}"))
+                                discordClient.sendMessage(webhookUrl, DiscordClient.DiscordMessage("Lista kategorii: ${productcategories.keys.joinToString(", ")}"))
+                            } catch (e: Exception) {
+                                println("Błąd wysyłania wiadomości")
+                            }
+                        }
+                    }
+                    "cat_laptops" -> {
+                        event.deferReply(true).queue()
+                        event.hook.sendMessage("Ukazano dostępne laptopy").queue()
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                val laptops = productcategories["laptop"] ?: emptyList()
+                                val message = if (laptops.isNotEmpty()){
+                                    "Dostępne laptopy: ${laptops.joinToString(", ")}"
+                                } else {
+                                    "Brak dostępnych laptopów"
+                                }
+                                discordClient.sendMessage(webhookUrl, DiscordClient.DiscordMessage(message))
+                            } catch (e: Exception) {
+                                println("Błąd wysyłania wiadomości")
+                            }
+                        }
+                    }
+                    "cat_computers" -> {
+                        event.deferReply(true).queue()
+                        event.hook.sendMessage("Ukazano dostępne komputery").queue()
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                val computers = productcategories["computer"] ?: emptyList()
+                                val message = if (computers.isNotEmpty()){
+                                    "Dostępne komputery: ${computers.joinToString(", ")}"
+                                } else {
+                                    "Brak dostępnych komputerów"
+                                }
+                                discordClient.sendMessage(webhookUrl, DiscordClient.DiscordMessage(message))
+                            } catch (e: Exception) {
+                                println("Błąd wysyłania wiadomości")
+                            }
+                        }
+                    }
+                    "cat_dryers" -> {
+                        event.deferReply(true).queue()
+                        event.hook.sendMessage("Ukazano dostępne suszarki").queue()
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                val dryers = productcategories["dryer"] ?: emptyList()
+                                val message = if (dryers.isNotEmpty()){
+                                    "Dostępne suszarki: ${dryers.joinToString(", ")}"
+                                } else {
+                                    "Brak dostępnych suszarek"
+                                }
+                                discordClient.sendMessage(webhookUrl, DiscordClient.DiscordMessage(message))
                             } catch (e: Exception) {
                                 println("Błąd wysyłania wiadomości")
                             }
@@ -48,7 +99,10 @@ fun main() {
         .updateCommands()
         .addCommands(
             Commands.slash("hello", "Wysyła użytkownikowi wiadomość hello world"),
-            Commands.slash("categories", "Wysyła użytkownikowi listę kategorii")
+            Commands.slash("categories", "Wysyła użytkownikowi listę kategorii"),
+            Commands.slash("cat_laptops", "Wyświetla dostępne laptopy"),
+            Commands.slash("cat_computers", "Wyświetla dostępne komputery"),
+            Commands.slash("cat_dryers", "Wyświetla dostępne suszarki")
         )
         .queue()
     println("Bot został uruchomiony")
