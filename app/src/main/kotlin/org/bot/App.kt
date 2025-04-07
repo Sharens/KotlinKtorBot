@@ -1,11 +1,13 @@
 package org.bot
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.requests.GatewayIntent
-import kotlinx.coroutines.runBlocking
 
 fun main() {
     val discordClient = DiscordClient()
@@ -16,17 +18,38 @@ fun main() {
         .enableIntents(GatewayIntent.MESSAGE_CONTENT)
         .addEventListeners(object : ListenerAdapter() {
             override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent){
-                if (event.name == "hello") {
+                when (event.name) {
+                    "hello" -> {
                         event.deferReply(true).queue()
                         event.hook.sendMessage("Wysłano wiadomość hello world").queue()
-                        runBlocking {
-                            discordClient.sendMessage(webhookUrl, DiscordClient.DiscordMessage("Hello World!"))
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                discordClient.sendMessage(webhookUrl, DiscordClient.DiscordMessage("Hello World!"))
+                            } catch (e: Exception) {
+                                println("Błąd wysyłania wiadomości")
+                            }
                         }
+                    }
+                    "categories" -> {
+                        event.deferReply(true).queue()
+                        event.hook.sendMessage("Wysłano wiadomość dostępne kategorie").queue()
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                discordClient.sendMessage(webhookUrl, DiscordClient.DiscordMessage("Lista kategorii: ${categories.joinToString(", ")}"))
+                            } catch (e: Exception) {
+                                println("Błąd wysyłania wiadomości")
+                            }
+                        }
+                    }
                 }
             }
         })
-        .build().updateCommands().addCommands(
-            Commands.slash("hello", "Wysyła użytkownikowi wiadomość hello world")
-        ).queue()
+        .build()
+        .updateCommands()
+        .addCommands(
+            Commands.slash("hello", "Wysyła użytkownikowi wiadomość hello world"),
+            Commands.slash("categories", "Wysyła użytkownikowi listę kategorii")
+        )
+        .queue()
     println("Bot został uruchomiony")
 }

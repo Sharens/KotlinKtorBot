@@ -9,6 +9,7 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
+val categories: MutableList<String> = mutableListOf("laptop", "komputer", "suszarki")
 
 class DiscordClient {
     private val client = HttpClient(CIO) {
